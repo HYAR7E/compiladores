@@ -7,8 +7,6 @@ int caracteres = 0;
 int palabras = 0;
 int lineas = 1;
 
-int countChars(char*);
-
 %}/* ============================================================= */
 %option noyywrap c++
 

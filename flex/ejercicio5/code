@@ -1,9 +1,12 @@
 %{
 #include <iostream>
+#include <math.h>
 using namespace std;
 
-char *palabra;
-int contador;
+char *buscar;
+char *reemplazar;
+
+void analizar(char *txt);
 
 %}/* ============================================================= */
 %option noyywrap c++
@@ -12,23 +15,23 @@ palabra			[a-zA-ZáéíóúÁÉÍÓÚñÑ]+
 
 %%/* ============================================================= */
 
-{palabra}		{ if(strcmp(yytext, palabra) == 0) contador++; }
-\n				/**/
-.				/**/
+{palabra}		{ analizar(yytext); }
 
 %%/* ============================================================= */
 
 int main(int argc, char **argv){
 	/* Codigo ejecutado antes del analisis lexico */
-	palabra = argv[1];
+	buscar = argv[1];
+	reemplazar = argv[2];
 
 	/* ejecutar analizador lexico */
 	FlexLexer* lexer = new yyFlexLexer;
 	while(lexer->yylex() != 0){}
-
-	cout<<"la palabra \""<<palabra<<"\" aparece "<<contador<<" veces"<<endl;
-
 	return 0;
 }
+void analizar(char *txt){
+	if(strcmp(txt, buscar) == 0) cout<<reemplazar;
+	else cout<<txt;
+}
 
-// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx seis < input
+// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx seis 6 < input
