@@ -1,0 +1,48 @@
+%{// Archivo/Codigo de cabecera
+// Librerias y configuracion inicial
+#include <iostream>
+using namespace std;
+
+// Declarar funciones
+int print_error();
+
+// Declarar variables
+int lineas = 0;
+int numeros = 0;
+%}
+/* ============================================================= */
+
+/* configuracion para usar codigo C++ */
+%option noyywrap c++
+
+/* definir tokens mediante expresiones regulares */
+digito		[0-9]
+
+%%/* enlazar token a funcion/accion ============================ */
+
+\n 			{ ++lineas; }
+{digito}	{ ++numeros; print_error(); }
+.			/**/
+
+%%/* =========================================================== */
+
+/* definir funcion main */
+int main(){
+	/* codigo estandar para usar C++ */
+	FlexLexer* lexer = new yyFlexLexer;
+	while(lexer->yylex() != 0){}
+
+	/* codigo definido por el usuario */
+	cout<<"lineas: "<<lineas<<endl;
+	cout<<"numeros: "<<numeros<<endl;
+
+	/* fin */
+	return 0;
+}
+
+/* Definir funciones declaradas en la cabecera */
+int print_error(){
+	cout<<"= se encontro un numero ="<<endl;
+}
+
+// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx < input

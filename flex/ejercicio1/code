@@ -1,0 +1,32 @@
+%{
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+char* multiplo_de_3(char* n);
+
+int lineas = 0;
+int numeros = 0;
+%}/* ============================================================= */
+%option noyywrap c++
+
+numero		[0-9]+
+
+%%/* ============================================================= */
+
+{numero}	multiplo_de_3(yytext);
+
+%%/* ============================================================= */
+
+int main(){
+	FlexLexer* lexer = new yyFlexLexer;
+	while(lexer->yylex() != 0){}
+	return 0;
+}
+
+char* multiplo_de_3(char* c){
+	if(stoi(c)%3==0) cout<<0;
+	else cout<<c;
+}
+
+// flex -+ ej1; c++ lex.yy.cc -o xxx; ./xxx < input
