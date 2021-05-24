@@ -1,38 +1,36 @@
 %{
 #include <iostream>
-#include <math.h>
 using namespace std;
 
-void sumar_parametro(int n);
+void comparar_palabra(char* txt);
 
-int suma;
-int multiplo;
+char *palabra;
+int contador;
 
 %}/* ============================================================= */
 %option noyywrap c++
 
-numero		[0-9]+
+palabra			[a-zA-ZáéíóúÁÉÍÓÚñÑ]+
 
 %%/* ============================================================= */
 
-{numero}	sumar_parametro(stoi(yytext));
+{palabra}		{ if(strcmp(yytext, palabra) == 0) contador++; }
+\n				/**/
+.				/**/
 
 %%/* ============================================================= */
 
 int main(int argc, char **argv){
 	/* Codigo ejecutado antes del analisis lexico */
-	suma = stoi(argv[1]);
-	multiplo = stoi(argv[2]);
-	cout<<"sumar "<<suma<<" a los multiplos de "<<multiplo<<endl;
+	palabra = argv[1];
 
 	/* ejecutar analizador lexico */
 	FlexLexer* lexer = new yyFlexLexer;
 	while(lexer->yylex() != 0){}
+
+	cout<<"la palabra \""<<palabra<<"\" aparece "<<contador<<" veces"<<endl;
+
 	return 0;
 }
-void sumar_parametro(int c){
-	if(c%multiplo == 0) cout<<c+suma;
-	else cout<<c;
-}
 
-// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx 100 2 < input
+// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx seis < input

@@ -1,48 +1,41 @@
-%{// Archivo/Codigo de cabecera
-// Librerias y configuracion inicial
+%{
 #include <iostream>
+#include <string.h>
 using namespace std;
 
-// Declarar funciones
-int print_error();
+int caracteres = 0;
+int palabras = 0;
+int lineas = 1;
 
-// Declarar variables
-int lineas = 0;
-int numeros = 0;
-%}
-/* ============================================================= */
+int countChars(char*);
 
-/* configuracion para usar codigo C++ */
+%}/* ============================================================= */
 %option noyywrap c++
 
-/* definir tokens mediante expresiones regulares */
-digito		[0-9]
+caracter		[0-9a-zA-ZáéíóúÁÉÍÓÚñÑ]
+palabra			[a-zA-ZáéíóúÁÉÍÓÚñÑ]+
 
-%%/* enlazar token a funcion/accion ============================ */
+%%/* ============================================================= */
 
-\n 			{ ++lineas; }
-{digito}	{ ++numeros; print_error(); }
-.			/**/
+{caracter}		caracteres++;
+{palabra}		{ palabras++; caracteres+=strlen(yytext); }
+\n.				lineas++;
+.				/**/
 
-%%/* =========================================================== */
+%%/* ============================================================= */
 
-/* definir funcion main */
 int main(){
-	/* codigo estandar para usar C++ */
 	FlexLexer* lexer = new yyFlexLexer;
 	while(lexer->yylex() != 0){}
 
-	/* codigo definido por el usuario */
+	cout<<"caracteres: "<<caracteres<<endl;
+	cout<<"palabras: "<<palabras<<endl;
 	cout<<"lineas: "<<lineas<<endl;
-	cout<<"numeros: "<<numeros<<endl;
-
-	/* fin */
 	return 0;
 }
 
-/* Definir funciones declaradas en la cabecera */
-int print_error(){
-	cout<<"= se encontro un numero ="<<endl;
-}
-
-// flex -+ ej3; c++ lex.yy.cc -o xxx; ./xxx < input
+/* Notas:
+	no cuenta espacios como caracteres
+	considera los caracteres de las palabras reconocidas
+*/
+// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx < input

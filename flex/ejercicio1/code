@@ -5,8 +5,6 @@ using namespace std;
 
 char* multiplo_de_3(char* n);
 
-int lineas = 0;
-int numeros = 0;
 %}/* ============================================================= */
 %option noyywrap c++
 
@@ -29,4 +27,4 @@ char* multiplo_de_3(char* c){
 	else cout<<c;
 }
 
-// flex -+ ej1; c++ lex.yy.cc -o xxx; ./xxx < input
+// flex -+ code; c++ lex.yy.cc -o xxx; ./xxx < input
